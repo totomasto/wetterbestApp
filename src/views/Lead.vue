@@ -16,7 +16,7 @@
                 
                 <card shadow class="card-profile mt--300" no-body>
                     <div class="px-4">
-                        <div class="row justify-content-center">
+                        <div class="row justify-content-center" style="margin-bottom:150px;">
                             <div class="col-lg-3 order-lg-2">
                             <router-link :to="{name: 'leads'}">                                
                                 <div class="card-profile-image">
@@ -29,49 +29,16 @@
                                 </div>
                                 </router-link>                             
                             </div>
-                            <div class="col-lg-4 order-lg-3 text-lg-right align-self-lg-center"><br>
-                                <div class="card-profile-actions py-4 mt-lg-0">
-                                    <div class="row justify-content-center">
-                                    <base-button type="info" size="sm" class="">Scor : 4.32</base-button>
-                                    
-                                    
-                                    <!-- <base-button type="default" size="sm" class="float-right"></base-button> -->
-                                    </div>
-                                    <br>
-                                     <div class="row justify-content-center">
-                                    <base-button type="danger" size="sm"  class="">Lead-uri fara raspuns : 11</base-button>
-                                     </div>
-                                
-                                </div>
-                            </div>
-                            <div class="col-lg-4 order-lg-1">
-                                <div class="card-profile-stats d-flex justify-content-center">
-                                    <div>
-                                        <span class="heading">22</span>
-                                        <span class="description">Castigat</span>
-                                    </div>
-                                    <div>
-                                        <span class="heading">10</span>
-                                        <span class="description">Pierdut</span>
-                                    </div>
-                                    <div>
-                                        <span class="heading">89</span>
-                                        <span class="description">In astept.</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="text-center mt-4">
-                            <h4>Lista lead-uri
-                            </h4>
-                            <div class="h6 font-weight-300"><i class="ni location_pin mr-2"></i>BAUSTOFFE DISTRIBUTION SRL, Chiajna, Ilfov</div>
                            
                         </div>
-                        <div class="mt-5 py-5 border-top text-center">
+                       
+                        <div class="mt-5 py-5 border-top text-center" style="margin-top: 100px;">
                             <div class="row justify-content-center">
                                 <div class="col-lg-4"></div>
                                 <div class="col-lg-4">
                                     <div v-if="!leads" class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                                    <h2 v-if="leads">Status curent:</h2><br>
+                                    <h3 v-if="leads">{{leads.status}}</h3><br>
                                     <div v-if="leads" class="row justify-content-center">
                                     <a href="tel: +40730137527"><base-button type="danger" size="sm"  class="">Suna client</base-button></a>
 
@@ -80,6 +47,7 @@
                                     <h2 v-if="leads">{{leads.name}}</h2>
                                     <ul v-if="leads"  style="list-style:none; padding-inline-start:0px;">
                                         <li><h6>Email:  <b>{{ leads.email}}</b></h6></li>
+                                        <li><h6>Telefon: <b>{{leads.phone}}</b></h6></li>
                                         <li><h6>Judet:  <b>{{leads.region}}</b></h6></li>
                                         <li><h6>Oras: <b>{{leads.city}}</b></h6></li>
                                         <li><h6>Tip: <b>{{leads.tip}}</b></h6></li>
@@ -89,15 +57,15 @@
                                     <ul v-if="leads" style="list-style:none; padding-inline-start:0px; margin-top:50px;">
                                         <li>
                                             <p>* Daca lead-ul a fost finalizat cu succes, introduceti no. facturii</p>
-                                            <input aria-describedby="addon-right addon-left" placeholder="WTB-F00000000" class="form-control">
-                                            <base-button type="success" size="sm" style="margin-top:15px;"  class="" @click="updateLeadStatus('Finalizat')">Finalizat</base-button>
+                                            <input aria-describedby="addon-right addon-left" v-model="success" placeholder="WTB-F00000000" class="form-control">
+                                            <base-button type="success" size="sm" style="margin-top:15px;"  class="" @click="failed = null; updateLeadStatus('Finalizat'); ">Finalizat</base-button>
                                         </li><br><br>
                                         <li>
                                              <p>* Daca lead-ul NU a fost finalizat, introduceti motivul pierderii lead-ului</p>
-                                            <input aria-describedby="addon-right addon-left" placeholder="Motiv" class="form-control">
-                                            <base-button type="danger" size="sm"  class="" style="margin-top:15px;" @click="updateLeadStatus('Pierdut')">Pierdut</base-button>
+                                            <input aria-describedby="addon-right addon-left" v-model="failed" placeholder="Motiv" class="form-control">
+                                            <base-button type="danger" size="sm"  class="" style="margin-top:15px;" @click="success = null; updateLeadStatus('Pierdut');">Pierdut</base-button>
                                         </li><br><br>
-                                        <li><base-button type="info" size="sm"  class="" @click="updateLeadStatus('In asteptare')">In asteptare</base-button></li><br>
+                                        <li><base-button type="info" size="sm"  class="" @click="success = null; failed = null; updateLeadStatus('In asteptare'); ">In asteptare</base-button></li><br>
                                     </ul>
                                 </div>
                                 <div class="col-lg-4"></div>
@@ -113,6 +81,7 @@
 
 
 <script>
+import firebase from 'firebase'
 export default {
     name:'Lead',
     data(){
@@ -123,19 +92,37 @@ export default {
             feedback: null, 
             noFact : null, 
             reason : null,  
+            success : null, 
+            failed : null, 
         }
     },
     methods:{
          importLeads(callback){
-
+             console.log(firebase.auth().currentUser.email);
             fetch(this.url)
             .then(res => res.json())
             .then(response => callback(null, response));
-
+            
 
         },
-        updateLeadStatus(){
+        updateLeadStatus(status){
+        
+        let statusUrl = `http://localhost:81/wtb/lead/update/${this.leads.name}/${status}/`;
 
+            console.log(status);
+            if(this.success){ 
+            fetch(statusUrl + this.success)
+            .then(res => console.log(res.status));
+            this.$router.push({name: 'leads'});
+            } else if(this.failed){ 
+                 fetch(statusUrl + this.failed)
+            .then(res => console.log(res.status));
+            this.$router.push({name: 'leads'});
+            } else if(status === 'In asteptare'){
+              fetch(statusUrl + 'In asteptare')
+            .then(res => console.log(res.status));
+            this.$router.push({name: 'leads'});
+            }
         }
     },
     mounted(){

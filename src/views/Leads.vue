@@ -34,7 +34,7 @@
                            
                         
                              <!-- Leads info brings the data about counting leads at the top of the page -->    
-                            <LeadsInfo @filterNoResponseLeads="filterNoResponseLeads"></LeadsInfo>
+                            <LeadsInfo v-on:filterNoResponseLeads="filterNoResponseLeads"></LeadsInfo>
                             <LeadsStatus ></LeadsStatus>   
                         </div>
                     
@@ -49,7 +49,7 @@
                                                         
                             <h3 style="margin-top:60px;">Lista lead-uri
                             </h3>
-                            <div class="h6 font-weight-300"><i class="ni location_pin mr-2"></i>BAUSTOFFE DISTRIBUTION SRL, Chiajna, Ilfov</div>
+                            <div class="h6 font-weight-300"><i class="ni location_pin mr-2"></i>{{email}}, Chiajna, Ilfov</div>
 
                            
                             
@@ -100,16 +100,19 @@
 </template>
 
 <script>
+import firebase from 'firebase'
 import LeadsInfo from '@/components/Functionality/Leads/LeadsInfo'
 import LeadsStatus from '@/components/Functionality/Leads/LeadsStatus'
 export default {
     name: 'Leads',
     data(){
         return { 
-            url: 'https://72c578e3.ngrok.io/leads/select',
+           
             leads : null,
             recentLeads : null,
             month: null,
+            email : firebase.auth().currentUser.email,
+            url: `http://localhost:81/leads/select/`,
         }
     },
     components:{
@@ -118,10 +121,10 @@ export default {
     },
     methods: {
         importLeads(callback){
-
-            fetch(this.url)
+            fetch(this.url + this.email)
             .then(res => res.json())
-            .then(response => callback(null, response));
+            .then(response => {
+              callback(null, response)});
 
 
         },
@@ -154,7 +157,8 @@ export default {
         resetAll(){
              // importing all leads for now 
         this.importLeads((err, response)=>{
-            response = response.filter(function (lead) { return lead.client == 'BAUSTOFFE DISTRIBUTION SRL';}).reverse();
+          console.log(response);
+            response = response.reverse();
             // console.log(response);
             this.leads = response;
             this.recentLeads = response.slice(0,10);
@@ -166,7 +170,7 @@ export default {
     mounted(){
         // importing all leads for now 
         this.importLeads((err, response)=>{
-            response = response.filter(function (lead) { return lead.client == 'BAUSTOFFE DISTRIBUTION SRL';}).reverse();
+            response = response.reverse();
             // console.log(response);
             this.leads = response;
             this.recentLeads = response.slice(0,10);

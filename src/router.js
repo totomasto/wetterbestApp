@@ -75,6 +75,15 @@ const router = new Router({
       }
     },
     {
+      path: "/register/:email",
+      name: "register",
+      components: {
+        header: AppHeader,
+        default: Register,
+        footer: AppFooter
+      }
+    },
+    {
       path: "/comanda",
       name: "Comanda",
       components: {
@@ -94,7 +103,7 @@ const router = new Router({
         default: Orders,
         footer: AppFooter
       },
-    }
+    },
     // {
     //   path: "/landing",
     //   name: "landing",
@@ -104,16 +113,7 @@ const router = new Router({
     //     footer: AppFooter
     //   }
     // },
-    // {
-    //   path: "/register",
-    //   name: "register",
-    //   components: {
-    //     header: AppHeader,
-    //     default: Register,
-    //     footer: AppFooter
-    //   }
-    // },
- 
+    
    
 
   

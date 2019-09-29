@@ -17,54 +17,44 @@
                           header-classes="bg-white pb-5"
                           body-classes="px-lg-5 py-lg-5"
                           class="border-0">
-                        <template>
-                            <div class="text-muted text-center mb-3">
-                                <small>Sign in with</small>
-                            </div>
-                            <div class="btn-wrapper text-center">
-                                <base-button type="neutral">
-                                    <img slot="icon" src="img/icons/common/github.svg">
-                                    Github
-                                </base-button>
-
-                                <base-button type="neutral">
-                                    <img slot="icon" src="img/icons/common/google.svg">
-                                    Google
-                                </base-button>
-                            </div>
-                        </template>
+                        
                         <template>
                             <div class="text-center text-muted mb-4">
-                                <small>Or sign up with credentials</small>
+                                <h5>Creati o parola pentru contul asociat adresei de email de mai jos:</h5>
                             </div>
                             <form role="form">
                                 <base-input alternative
                                             class="mb-3"
-                                            placeholder="Name"
-                                            addon-left-icon="ni ni-hat-3">
-                                </base-input>
-                                <base-input alternative
-                                            class="mb-3"
-                                            placeholder="Email"
+                                            placeholder v-model="email"
+                                            readonly=""
                                             addon-left-icon="ni ni-email-83">
+                                
                                 </base-input>
                                 <base-input alternative
                                             type="password"
-                                            placeholder="Password"
+                                            placeholder="Parola"
+                                            v-model="password"
                                             addon-left-icon="ni ni-lock-circle-open">
                                 </base-input>
+                                 <base-input alternative
+                                            type="password"
+                                            placeholder="Confirma parola"
+                                            v-model="confirm"
+                                            addon-left-icon="ni ni-lock-circle-open">
+                                </base-input>
+                                <h4 v-if="feedback">{{feedback}}</h4>
                                 <div class="text-muted font-italic">
                                     <small>password strength:
                                         <span class="text-success font-weight-700">strong</span>
                                     </small>
                                 </div>
                                 <base-checkbox>
-                                    <span>I agree with the
-                                        <a href="#">Privacy Policy</a>
+                                    <span>Sunt de acord cu 
+                                        <a href="#">Termenii si conditiile</a>
                                     </span>
                                 </base-checkbox>
                                 <div class="text-center">
-                                    <base-button type="primary" class="my-4">Create account</base-button>
+                                    <base-button type="primary" @click="registerUser" class="my-4">Creeaza cont</base-button>
                                 </div>
                             </form>
                         </template>
@@ -75,7 +65,33 @@
     </section>
 </template>
 <script>
-export default {};
+import firebase from 'firebase'
+export default {
+    name: 'register', 
+    data(){
+        return { 
+            email: this.$route.params.email,
+            password: null,
+            confirm: null,
+            feedback : null,
+        }
+    },
+    methods:{
+        registerUser(){
+            if(this.confirm === this.password){
+
+
+                firebase.auth().createUserWithEmailAndPassword(this.email,this.password)
+                .then(()=>{
+                    this.$router.push({name:'leads'});
+                })
+
+            } else { this.feedback = 'Parolele nu coincid. Va rugam sa verificati parola. '}
+        }
+    }
+    
+
+};
 </script>
 <style>
 </style>
