@@ -10,6 +10,7 @@
         <examples></examples>
         <download-section></download-section>
         <carousel></carousel>
+        <modal></modal>
     </div>
 </template>
 <script>
@@ -23,6 +24,7 @@ import Carousel from "./components/Carousel";
 import Icons from "./components/Icons";
 import Examples from "./components/Examples";
 import DownloadSection from "./components/DownloadSection";
+import Modals from "./components/JavascriptComponents/Modals"
 
 export default {
   name: "components",
@@ -36,7 +38,8 @@ export default {
     Carousel,
     Icons,
     Examples,
-    DownloadSection
+    DownloadSection,
+    Modals
   }
 };
 </script>

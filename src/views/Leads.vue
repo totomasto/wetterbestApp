@@ -35,7 +35,7 @@
                         
                              <!-- Leads info brings the data about counting leads at the top of the page -->    
                             <LeadsInfo v-on:filterNoResponseLeads="filterNoResponseLeads"></LeadsInfo>
-                            <LeadsStatus ></LeadsStatus>   
+                            <LeadsStatus v-if="leads" :leads="leads" > </LeadsStatus>   
                         </div>
                     
                             <div class="text-center mt-4">
@@ -56,7 +56,8 @@
                             
                             <h4 style="margin-top:60px;">Filtreaza lead-uri</h4>
                             <label for="">*Selecteaza luna</label><br>
-                            <select class="form-control" @change="filterLeadsByMonth(month)" v-model="month" name="" id="">
+                            <select class="form-control" @change="filterLeadsByMonth(month)" v-model="month"  name="" id="">
+                              
                                 <option value="01" selected="">Ianuarie</option>
                                 <option value="02">Februarie</option>
                                 <option value="03">Martie</option>
@@ -112,7 +113,7 @@ export default {
             recentLeads : null,
             month: null,
             email : firebase.auth().currentUser.email,
-            url: `http://localhost:81/leads/select/`,
+            url: `https://72c578e3.ngrok.io/leads/select/`,
         }
     },
     components:{
@@ -167,7 +168,7 @@ export default {
         }
 
     }, 
-    mounted(){
+    created(){
         // importing all leads for now 
         this.importLeads((err, response)=>{
             response = response.reverse();

@@ -17,7 +17,7 @@
             </div>
 
             <ul class="navbar-nav navbar-nav-hover align-items-lg-center">
-                <base-dropdown class="nav-item" menu-classes="dropdown-menu-xl">
+                <!-- <base-dropdown class="nav-item" menu-classes="dropdown-menu-xl">
                     <a slot="title" href="#" class="nav-link" data-toggle="dropdown" role="button">
                         <i class="ni ni-ui-04 d-lg-none"></i>
                         <span class="nav-link-inner--text">Aplicatii conectate </span>
@@ -72,14 +72,14 @@
                             </div>
                         </a>
                     </div>
-                </base-dropdown>
+                </base-dropdown> -->
                 <base-dropdown tag="li" class="nav-item">
                     <a slot="title" href="#" class="nav-link" data-toggle="dropdown" role="button">
                         <i class="ni ni-collection d-lg-none"></i>
                         <span class="nav-link-inner--text">Actiuni</span>
                     </a>
-                     <router-link :to="{ name: 'Comanda' }" class="dropdown-item">Comanda noua</router-link>
-                      <router-link :to="{ name: 'orders' }" class="dropdown-item">Comenzile mele</router-link>
+                     <!-- <router-link :to="{ name: 'Comanda' }" class="dropdown-item">Comanda noua</router-link>
+                      <router-link :to="{ name: 'orders' }" class="dropdown-item">Comenzile mele</router-link> -->
                     <router-link :to="{ name: 'leads' }" class="dropdown-item">Lead-uri</router-link>
                     <router-link v-if="!user" :to="{ name: 'login' }" class="dropdown-item">Logheaza-te</router-link>
                     <a v-if="user" @click="logout" class="dropdown-item">Delogheaza-te</a>
@@ -88,7 +88,7 @@
                     <router-link to="/register" class="dropdown-item">Register</router-link> -->
                 </base-dropdown>
             </ul>
-            <ul class="navbar-nav align-items-lg-center ml-lg-auto">
+            <!-- <ul class="navbar-nav align-items-lg-center ml-lg-auto">
                
                 <li class="nav-item d-none d-lg-block ml-lg-4">
                     <router-link :to="{name : 'Comanda'}"
@@ -108,7 +108,7 @@
                         <span class="nav-link-inner--text">Comenzile mele</span>
                     </router-link>
                 </li>
-            </ul>
+            </ul> -->
         </base-nav>
     </header>
 </template>
@@ -126,7 +126,7 @@ export default {
   },
     data(){
         return{
-            user:null
+            user:null,
         }
     },
     methods: {

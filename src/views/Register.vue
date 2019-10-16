@@ -18,7 +18,7 @@
                           body-classes="px-lg-5 py-lg-5"
                           class="border-0">
                         
-                        <template>
+                        <template v-if="valid">
                             <div class="text-center text-muted mb-4">
                                 <h5>Creati o parola pentru contul asociat adresei de email de mai jos:</h5>
                             </div>
@@ -43,11 +43,7 @@
                                             addon-left-icon="ni ni-lock-circle-open">
                                 </base-input>
                                 <h4 v-if="feedback">{{feedback}}</h4>
-                                <div class="text-muted font-italic">
-                                    <small>password strength:
-                                        <span class="text-success font-weight-700">strong</span>
-                                    </small>
-                                </div>
+                                
                                 <base-checkbox>
                                     <span>Sunt de acord cu 
                                         <a href="#">Termenii si conditiile</a>
@@ -58,6 +54,7 @@
                                 </div>
                             </form>
                         </template>
+                        <h3 v-else> Adresa de mail nu este valida sau nu sunteti inregistrat in sistemul de lead-uri, va rugam contactati agentul colaborator ! <hr> Cod eroare : 201 .</h3>
                     </card>
                 </div>
             </div>
@@ -74,20 +71,36 @@ export default {
             password: null,
             confirm: null,
             feedback : null,
+            valid: false, 
+            url: `https://72c578e3.ngrok.io/leads/select/`,
         }
     },
     methods:{
         registerUser(){
             if(this.confirm === this.password){
 
-
+                this.email = this.email.replace(/ /g,'');
                 firebase.auth().createUserWithEmailAndPassword(this.email,this.password)
                 .then(()=>{
                     this.$router.push({name:'leads'});
                 })
 
             } else { this.feedback = 'Parolele nu coincid. Va rugam sa verificati parola. '}
+        },
+        checkIfUserExists(callback){
+
+             fetch(this.url + this.email)
+            .then(res => res.json())
+            .then(response => {
+              callback(null, response)});
+
         }
+    },
+    created(){
+        this.checkIfUserExists((err, result)=>{
+
+                (result.length > 0) ? this.valid = true : this.valid = false;
+        });
     }
     
 

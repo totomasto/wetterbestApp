@@ -21,7 +21,7 @@
                             <div class="text-muted text-center mb-3">
                                                          <img src="https://www.wetterbest.ro/wp-content/themes/wtb-child/img/logo.png" alt=""><br>
                             </div>
-                        <template v-if="!authentificated">
+                        <template v-if="authentificated.length == 0">
                             <div class="text-muted text-center mb-3">
                                 Daca esti una dintre firmele cu care lucram, avem nevoie de <br><b>CIF/RO -ul</b> firmei tale ca sa te putem identifica:  
                             </div>
@@ -30,6 +30,7 @@
                             <li class="list-inline-item"><input aria-describedby="addon-right addon-left" v-model="cif" placeholder="Codul tau de identificare fiscala" class="form-control is-valid"></li>
                             </ul>
                             <div class="btn-wrapper text-center">
+                                <h6 v-if="feedback"><mark>{{feedback}}</mark></h6>
                                <br>
                                <button type="button" @click="authReseller" class="btn btn-success">Am introdus datele</button>
                                <br><br>
@@ -38,14 +39,20 @@
                         </template>
                         <template v-else>
                             <div class="text-muted text-center mb-3">
-                               Am identificat urmatoarea adresa de email:  
+                               Am identificat urmatoarele adrese de email asociate cu CIF-ul introdus:  
                             </div>
-                            <h5>{{authentificated}}</h5>
+                            <h5 v-if="authentificated.length > 1" style="margin-top:20px;margin-bottom:20px;">Selectati adresa pe care doriti sa o folositi: </h5>
+                            <ul style="list-style:none; padding-inline-start:15px;">
+                            <li  v-for="(email, index) in authentificated" :key="index">
+                                 <base-button type="info" size="sm" @click="selectEmailAddr(email)" >{{email}}</base-button><br><br>
+                            </li>
+                            </ul>
                             <div class="btn-wrapper text-center">
                             <div class="text-muted text-center mb-3">
                                 Daca doresti sa te inregistrezi, vom trimite un link de inregistrare pe aceasta adresa de email. 
                             </div>                              
                                <br>
+                               <h5 v-if="feedback"><mark>{{feedback}}</mark></h5>
                                <button type="button" @click="sendSignUpLinkToResseler" v-if="!sendLinkAction" class="btn btn-success">Trimite link</button>
                                <div role="alert" class="alert alert-success" v-else><strong>Succes!</strong>Link-ul de inregistrare a fost trimis.</div>
                                <div v-if="loading" class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
@@ -83,10 +90,11 @@ export default {
             email: null,
             password: null,
             feedback: null,
-            authentificated: null,
+            authentificated: [],
             cif: null, 
             sendLinkAction: null,
             loading: null, 
+            isActive: true,
         }
     },
     methods: {
@@ -120,28 +128,48 @@ export default {
             }
             }).then(res => res.json())
             .then(response => callback(null, response))
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.log('Error - no email found:', error);
+                this.feedback = 'Nu a fost gasita o adresa de email pentru RO-ul introdus, va rugam contactati agentul colaborator pentru a verifica daca codul dvs. este valid' ;
+                });
 
             // callback(null, null);
         },
         authReseller(){
             this.checkForResellerExistence((err, email)=>{
+                
+              
 
-                this.authentificated = email.E_Mail;
-                console.log(this.authentificated);
+               if(email.E_Mail.includes(';')){
+                   let result = email.E_Mail.split(';');
+                   result.forEach(el => this.authentificated.push(el));
+                   
+                } else {
+                this.authentificated.push(email.E_Mail);
+                }
+                this.feedback = null; 
             });
+              
+        
         },
         async sendSignUpLinkToResseler(){
-
+            if(this.authentificated.length > 1){
+                this.feedback = 'Va rugam selectati o adresa de email !'
+            } else {
             this.loading = true;
 
-             var url = 'http://localhost:81/wtb/reseller/signup/'+this.authentificated;
+             var url = 'https://72c578e3.ngrok.io/wtb/reseller/signup/'+this.authentificated[0];
             const response = await fetch(url);
             console.log(response.status);
             this.sendLinkAction = true; 
             
             this.loading = null;
-
+            }
+        },
+        selectEmailAddr(email){
+            this.feedback = null;
+            if(this.authentificated.length > 1) this.authentificated = this.authentificated.filter(em => em === email);
+            
         }
     
     },

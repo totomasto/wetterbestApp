@@ -69,6 +69,7 @@
                                     </ul>
                                 </div>
                                 <div class="col-lg-4"></div>
+                              
 
                             </div>
                         </div>
@@ -82,13 +83,14 @@
 
 <script>
 import firebase from 'firebase'
+
 export default {
     name:'Lead',
     data(){
         return { 
             leads : null,
             lead: this.$route.params.id,
-            url: 'https://72c578e3.ngrok.io/leads/select',
+            url: 'https://72c578e3.ngrok.io/leads/select/',
             feedback: null, 
             noFact : null, 
             reason : null,  
@@ -98,8 +100,8 @@ export default {
     },
     methods:{
          importLeads(callback){
-             console.log(firebase.auth().currentUser.email);
-            fetch(this.url)
+             let email = firebase.auth().currentUser.email;
+            fetch(this.url + email)
             .then(res => res.json())
             .then(response => callback(null, response));
             
@@ -107,20 +109,23 @@ export default {
         },
         updateLeadStatus(status){
         
-        let statusUrl = `http://localhost:81/wtb/lead/update/${this.leads.name}/${status}/`;
+        let statusUrl = `https://72c578e3.ngrok.io/wtb/lead/update/${this.leads.name}/${status}/`;
 
-            console.log(status);
+            // console.log(status);
             if(this.success){ 
             fetch(statusUrl + this.success)
             .then(res => console.log(res.status));
+            confirm("Lead-ul a fost updatat cu succes, Multumim !");
             this.$router.push({name: 'leads'});
             } else if(this.failed){ 
                  fetch(statusUrl + this.failed)
             .then(res => console.log(res.status));
+                        confirm("Lead-ul a fost updatat cu succes, Multumim !");
             this.$router.push({name: 'leads'});
             } else if(status === 'In asteptare'){
               fetch(statusUrl + 'In asteptare')
             .then(res => console.log(res.status));
+                        confirm("Lead-ul a fost updatat cu succes, Multumim !");
             this.$router.push({name: 'leads'});
             }
         }

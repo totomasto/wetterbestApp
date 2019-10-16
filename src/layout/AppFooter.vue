@@ -5,29 +5,20 @@
             <div class="row row-grid align-items-center my-md">
                 <div class="col-lg-6">
                     <h3 class="text-primary font-weight-light mb-2">Iti multumim ca folosesti platforma noastra!</h3>
-                    <h4 class="mb-0 font-weight-light">Ne gasesti si pe aceste platforme.</h4>
+                    <h4 class="mb-0 font-weight-light">Ne poti contacta si pe platformele de mai jos . </h4>
                 </div>
                 <div class="col-lg-6 text-lg-center btn-wrapper">
-                    <a target="_blank" rel="noopener" href="https://twitter.com/creativetim"
-                       class="btn btn-neutral btn-icon-only btn-twitter btn-round btn-lg" data-toggle="tooltip"
-                       data-original-title="Follow us">
-                        <i class="fa fa-twitter"></i>
-                    </a>
-                    <a target="_blank" rel="noopener" href="https://www.facebook.com/creativetim"
+                    <a target="_blank" rel="noopener" href="https://www.facebook.com/Wetterbest/"
                        class="btn btn-neutral btn-icon-only btn-facebook btn-round btn-lg" data-toggle="tooltip"
                        data-original-title="Like us">
                         <i class="fa fa-facebook-square"></i>
                     </a>
-                    <a target="_blank" rel="noopener" href="https://dribbble.com/creativetim"
+                    <a target="_blank" rel="noopener" href="https://www.instagram.com/wetterbest.ro/?hl=ro"
                        class="btn btn-neutral btn-icon-only btn-dribbble btn-lg btn-round" data-toggle="tooltip"
                        data-original-title="Follow us">
-                        <i class="fa fa-dribbble"></i>
+                        <i class="fa fa-instagram"></i>
                     </a>
-                    <a target="_blank" rel="noopener" href="https://github.com/creativetimofficial"
-                       class="btn btn-neutral btn-icon-only btn-github btn-round btn-lg" data-toggle="tooltip"
-                       data-original-title="Star on Github">
-                        <i class="fa fa-github"></i>
-                    </a>
+                   
                 </div>
             </div>
             <hr>

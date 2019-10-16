@@ -71,9 +71,9 @@
                             </a>
                         </div>
                         <div class="col-6 text-right">
-                            <a href="#" class="text-light">
+                            <router-link :to="{name : 'signup'}" class="text-light">
                                 <small>Creeaza un cont</small>
-                            </a>
+                            </router-link>
                         </div>
                     </div>
                 </div>
